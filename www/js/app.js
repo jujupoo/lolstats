@@ -23,9 +23,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 })
 
-   .config(function (lolapi) {
-       lolapi.key = "RGAPI-d84fd0af-f6cb-40bc-ae1f-1cb4e03d674c"
-   })
+
+  .constant("appConfig", {
+    key : "RGAPI-d84fd0af-f6cb-40bc-ae1f-1cb4e03d674c",
+    baseurl: "https://na.api.pvp.net/"
+  })
+
 
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -44,34 +47,26 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
 
   // Each tab has its own nav history stack:
 
-  .state('tab.dash', {
-    url: '/dash',
+  .state('tab.welcome', {
+    url: '/welcome',
     views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+      'tab-welcome': {
+        templateUrl: 'templates/tab-welcome.html',
+        controller: 'WelcomeCtrl'
       }
     }
   })
 
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.champions', {
+      url: '/champions/:summoner_name',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'tab-champions': {
+          templateUrl: 'templates/tab-champions.html',
+          controller: 'ChampionsCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
-      views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
-        }
-      }
-    })
+
 
   .state('tab.account', {
     url: '/account',
@@ -84,6 +79,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/welcome');
 
 });

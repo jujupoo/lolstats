@@ -1,44 +1,44 @@
 angular.module('starter.controllers', [])
 
-.controller('DashCtrl', function ($scope) { })
 
-.controller('LOLstatsCtrl', function ($scope,$stateParams,LOLstats) {
-    var $scope.stats = null;
-    var initStats = function($stateParams.summonerID){
-
-    
-        LOLstats.getStats(summonerID).then(
-            function(result){
-                $scope.stats = result.data;
-            },
-                function (error) {
-                    UtilService.showError(error);
-                }
-        );
+  .controller('WelcomeCtrl', function ($scope, $state) {
+    $scope.auth = {
+      summoner_name: null
     }
-})
 
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
+    $scope.submit = function () {
+      $state.go("tab.champions", {summoner_name: $scope.auth.summoner_name})
+    }
+  })
 
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
-})
+  .controller('ChampionsCtrl', function ($scope, $stateParams, appConfig, Champions) {
+    $scope.stats = null;
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-})
+    var initStats = function () {
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
-});
+      var summoner_name = $stateParams.summoner_name;
+
+      Champions.getIDBySummonerName(summoner_name)
+        .then(
+        function (result) {
+          var sid = result[summoner_name].id();
+          return Champions.getStats(sid);
+        })
+        .catch(function (e) {
+          console.log(e);
+        })
+      
+    }
+
+    $scope.$on("$ionicView.enter", function (scopes, states) {
+      initStats();
+    });
+
+  })
+
+  .controller('AccountCtrl', function ($scope) {
+    console.log("Account page");
+    $scope.settings = {
+      enableFriends: true
+    };
+  });
